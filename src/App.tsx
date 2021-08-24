@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import TodoList, {TaskType} from "./TodoList";
 import {v1} from "uuid";
+import {AddItemForm} from "./AddItemForm";
 
 export type FilterValuesType = "all" | "active" | "completed"
 type TodoListType = {
@@ -9,7 +10,6 @@ type TodoListType = {
     title: string
     filter: FilterValuesType
 }
-
 
 
 function App() {
@@ -54,7 +54,10 @@ function App() {
         tasks[todoListID] = tasks[todoListID].map(t => t.id === taskID ? {...t, isDone: isDone} : t)
         setTasks({...tasks})
     }
-
+    const changeTitleTask = (taskID: string, title:string, todoListID: string) => {
+        tasks[todoListID] = tasks[todoListID].map(t => t.id === taskID ? {...t, title} : t)
+        setTasks({...tasks})
+    }
 
     const changeFilter = (filter: FilterValuesType, todoListID: string) => {
         setTodoLists(todolists.map(tl => tl.id === todoListID ? {...tl, filter: filter} : tl))
@@ -63,8 +66,24 @@ function App() {
         setTodoLists(todolists.filter(tl => tl.id !== todoListID))
         delete tasks[todoListID]
     }
-
-
+    const addTodoList = (title: string) => {
+        const newTodoListID = v1()
+        const newTodoList: TodoListType = {
+            id: newTodoListID,
+            title,
+            filter: "all"
+        }
+        setTodoLists([...todolists,newTodoList])
+        setTasks({...tasks,[newTodoListID]:[]})
+    }
+    const ChangeTodoListTitle=(title:string,todoListID:string)=>{
+        setTodoLists(todolists.map(tl => tl.id === todoListID ? {...tl, title} : tl))
+    }
+    const ChangeTaskTitle=(taskID:string,title:string,todoListID:string)=>{
+        tasks[todoListID] = tasks[todoListID].map(t => t.id === taskID ? {...t, title} : t)
+        setTasks({...tasks})
+    }
+// GUI (CRUD):
     const todoListComponents = todolists.map(tl => {
         let tasksForTodoList = tasks[tl.id]
         if (tl.filter === "active") {
@@ -85,14 +104,16 @@ function App() {
                 removeTodoList={removeTodoList}
                 changeFilter={changeFilter}
                 changeTaskStatus={changeTaskStatus}
-
-
+                ChangeTitleTask={changeTitleTask}
+                ChangeTodoListTitle={ChangeTodoListTitle}
             />
         )
     })
-    // GUI (CRUD):
+
+
     return (
         <div className="App">
+            <AddItemForm addItem={addTodoList}/>
             {todoListComponents}
         </div>
     );
