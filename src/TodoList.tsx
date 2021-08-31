@@ -2,6 +2,8 @@ import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import {FilterValuesType} from "./App";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
+import {Button, Checkbox, IconButton} from "@material-ui/core";
+import {Delete} from "@material-ui/icons";
 
 type TodoListPropsType = {
     id: string
@@ -34,9 +36,8 @@ function TodoList(props: TodoListPropsType) {
 
 
         return (
-            <li key={t.id}>
-                <input
-                    type="checkbox"
+            <div key={t.id}>
+                <Checkbox
                     checked={t.isDone}
                     onChange={changeTaskStatus}
                 />
@@ -44,8 +45,11 @@ function TodoList(props: TodoListPropsType) {
                               ChangeTitle={ChangeTitleTask}
                 />
 
-                <button onClick={removeTask}>X</button>
-            </li>
+
+                <IconButton onClick={removeTask} aria-label="delete">
+                    <Delete />
+                </IconButton>
+            </div>
         )
     }
     const tasksJSXElements = props.tasks.map(getTaskJSXElement)
@@ -59,18 +63,15 @@ function TodoList(props: TodoListPropsType) {
         props.ChangeTodoListTitle(title,props.id)
     }
 
-
-    const allBtnClass = props.filter === "all" ? "active-filter" : ""
-    const activeBtnClass = props.filter === "active" ? "active-filter" : ""
-    const completedBtnClass = props.filter === "completed" ? "active-filter" : ""
-
     // JSX
     return (
         <div>
             <h3>
                 <EditableSpan title={props.title} ChangeTitle={ChangeTodoListTitle}
                 />
-                <button onClick={removeToDoList}>x</button>
+                <IconButton onClick={removeToDoList} aria-label="delete">
+                    <Delete />
+                </IconButton>
             </h3>
 
                 <AddItemForm addItem={addTask}/>
@@ -78,21 +79,9 @@ function TodoList(props: TodoListPropsType) {
                 {tasksJSXElements}
             </ul>
             <div>
-                <button
-                    className={allBtnClass}
-                    onClick={setAllFilterValue}
-                >All
-                </button>
-                <button
-                    className={activeBtnClass}
-                    onClick={setActiveFilterValue}
-                >Active
-                </button>
-                <button
-                    className={completedBtnClass}
-                    onClick={setCompletedFilterValue}
-                >Completed
-                </button>
+                <Button variant={ props.filter === "all" ? "contained" : "text"} onClick={setAllFilterValue}> All </Button>
+                <Button variant={props.filter === "active" ? "contained" : "text"} color={"primary"} onClick={setActiveFilterValue}>Active</Button>
+                <Button variant={props.filter === "completed" ? "contained" : "text"} color={"secondary"} onClick={setCompletedFilterValue}>Completed</Button>
             </div>
         </div>
     )
