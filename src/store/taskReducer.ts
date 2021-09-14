@@ -1,6 +1,6 @@
 import {TasksTypes} from "../App";
 import {v1} from "uuid";
-import {addTodoListAcType} from "./todoListReducer";
+import {addTodoListAcType, removeTodoListAcType} from "./todoListReducer";
 
 
 export const TaskReducer = (state: TasksTypes, action: containerTaskTypes):TasksTypes => {
@@ -20,6 +20,11 @@ export const TaskReducer = (state: TasksTypes, action: containerTaskTypes):Tasks
         case "CHANGE-TASK-TITLE":{
             return {...state,[action.todoListID]:[...state[action.todoListID].map(t=>t.id===action.taskID?{...t,title:action.title}:t)]}
         }
+        case "REMOVE-TDL":{
+            let copyState={...state}
+            delete copyState[action.todolistID]
+            return copyState
+        }
 
         default: return state
 
@@ -27,7 +32,7 @@ export const TaskReducer = (state: TasksTypes, action: containerTaskTypes):Tasks
 }
 
 
-export  type containerTaskTypes = removeTaskAcType|addTaskAcType|addTodoListAcType|changeTaskStatusAcType|changeTaskTitleAcType
+export  type containerTaskTypes = removeTaskAcType|addTaskAcType|addTodoListAcType|changeTaskStatusAcType|changeTaskTitleAcType|removeTodoListAcType
 
 export type removeTaskAcType = ReturnType<typeof removeTaskAc>
 export const removeTaskAc = (taskID: string, todoListID: string) => {
