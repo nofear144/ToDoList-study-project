@@ -22,19 +22,16 @@ export const TaskReducer = (state: TasksTypes = initialState, action: containerT
         case "CHANGE-TASK-STATUS": {
             return {
                 ...state,
-                [action.todolistID]: [...state[action.todolistID].map(t => t.id === action.taskID ? {
-                    ...t,
-                    isDone: action.isDone
-                } : t)]
+                [action.todolistID]: state[action.todolistID].map(t => t.id === action.taskID ? {...t, isDone: action.isDone} : t)
             }
         }
         case "CHANGE-TASK-TITLE": {
             return {
                 ...state,
-                [action.todoListID]: [...state[action.todoListID].map(t => t.id === action.taskID ? {
+                [action.todoListID]: state[action.todoListID].map(t => t.id === action.taskID ? {
                     ...t,
                     title: action.title
-                } : t)]
+                } : t)
             }
         }
         case "REMOVE-TDL": {

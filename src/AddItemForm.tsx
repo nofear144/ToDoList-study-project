@@ -6,7 +6,9 @@ export type AddItemFormPropsType = {
     addItem: (title: string) => void
 }
 
-export function AddItemForm(props:AddItemFormPropsType) {
+export const AddItemForm = React.memo( (props: AddItemFormPropsType) => {
+    console.log("Add item form rendered")
+
     const [title, setTitle] = useState<string>("")
     const [error, setError] = useState<boolean>(false)
     const changeTitle = (event: ChangeEvent<HTMLInputElement>) => {
@@ -38,12 +40,12 @@ export function AddItemForm(props:AddItemFormPropsType) {
                 value={title}
                 onChange={changeTitle}
                 onKeyPress={onKeyPressAddTask}
-                helperText={error?"Incorrect entry.":""}
+                helperText={error ? "Incorrect entry." : ""}
             />
-            <IconButton  color={"primary"} onClick={addItem}>
-            <PlaylistAdd/>
+            <IconButton color={"primary"} onClick={addItem}>
+                <PlaylistAdd/>
             </IconButton>
 
         </div>
     )
-}
+})
