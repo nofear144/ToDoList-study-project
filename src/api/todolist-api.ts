@@ -7,21 +7,23 @@ type TodolistType = {
     addedDate: string,
     order: number
 }
-
-type CreateTodosType = {
-    data:{
-        item:TodolistType
-    }
+type ResponseType<D> = {
+    data: D
     fieldsErrors: Array<string>
     messages: Array<string>
     resultCode: number
+
 }
-type UpdateAndDeleteTodosType={
-data: {}
-fieldsErrors: Array<string>
-messages: Array<string>
-resultCode: number
+export type TaskUpdateType={
+    title:string
+    description: string
+    completed: boolean
+    status: number
+    priority: number
+    startDate: string
+    deadline: string
 }
+
 
 const instance = axios.create({
     baseURL: "https://social-network.samuraijs.com/api/1.1/",
@@ -34,23 +36,35 @@ const instance = axios.create({
 })
 export const todolistApi = {
     getTodos() {
-        return instance.get<Array<TodolistType>>("todo-lists")
+        return instance.get<Array<ResponseType<{ item: TodolistType }>>>("todo-lists")
 
     },
     createTodos(title: string) {
-        return instance.post<{title:string},CreateTodosType>("todo-lists", {title})
+        return instance.post<{ title: string }, ResponseType<{ item: TodolistType }>>("todo-lists", {title})
 
     },
     deleteTodos(todolistID: string) {
 
-        return instance.delete<UpdateAndDeleteTodosType>(`/todo-lists/${todolistID}`)
+        return instance.delete<ResponseType<{}>>(`/todo-lists/${todolistID}`)
 
     },
     updateTodos(todolistID: string, title: string) {
 
-        return instance.put<{title:string},UpdateAndDeleteTodosType>(`todo-lists/${todolistID}`, {title})
+        return instance.put<{ title: string }, ResponseType<{}>>(`todo-lists/${todolistID}`, {title})
 
-    }
+    },
 
+    getTask(todoListId: string) {
+        return instance.get(`/todo-lists/${todoListId}/tasks`)
+    },
+    createTask(todoListId: string, title: string) {
+        return instance.post(`/todo-lists/${todoListId}/tasks`, {title})
+    },
+    deleteTask(todoListId: string, taskId: string) {
+        return instance.delete(`/todo-lists/${todoListId}/tasks/${taskId}`)
+    },
+    updateTask(todoListId:string,taskId:string,model:TaskUpdateType){
+        return instance.put(`/todo-lists/${todoListId}/tasks/${taskId}`,model)
+    },
 
 }
