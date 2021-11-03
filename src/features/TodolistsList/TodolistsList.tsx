@@ -29,7 +29,7 @@ export const TodolistsList: React.FC<PropsType> = ({demo = false}) => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (demo) {
+        if (demo || !isLoggedIn) {
             return;
         }
         const thunk = fetchTodolistsTC()
@@ -77,7 +77,7 @@ export const TodolistsList: React.FC<PropsType> = ({demo = false}) => {
     }, [dispatch])
 
 if(!isLoggedIn){
-    <Redirect to={'/login'}/>
+   return <Redirect to={'/login'}/>
 }
     return <>
         <Grid container style={{padding: '20px'}}>

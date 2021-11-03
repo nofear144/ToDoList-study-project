@@ -16,7 +16,13 @@ export type LoginParamsType = {
 export const authAPI = {
     login(data: LoginParamsType) {
         return instance.post<LoginParamsType,AxiosResponse<ResponseType<{ userId?: number }>>>('auth/login', data)
-    }
+    },
+    logout(){
+        return instance.delete<ResponseType>('/auth/login')
+    },
+    me(){
+        return instance.get<ResponseType<MeResponseType>>('/auth/me')
+    },
 }
 
 // api
@@ -48,6 +54,11 @@ export const todolistsAPI = {
 }
 
 // types
+export type MeResponseType={
+    id:number
+    email:string
+    login:string
+}
 export type TodolistType = {
     id: string
     title: string
